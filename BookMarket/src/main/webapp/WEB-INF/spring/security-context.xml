@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						https://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security
+						http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<http use-expressions="true">
+		<intercept-url pattern="/books/add" access="hasAuthority('ROLE_ADMIN')" />
+		<!-- hasRole은 적용이 안됨 -->
+		<!-- <intercept-url pattern="/books" access="hasAuthority('ROLE_USER')" /> -->
+		<!-- login-page="login" >> login-page="/login" -->
+		<form-login login-page="/login"
+					default-target-url="/books/add"
+					authentication-failure-url="/loginfailed"
+					username-parameter="username"
+					password-parameter="password" />
+		<csrf />
+		<logout logout-success-url="/logout" />
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<user name="Admin" password="{noop}Admin1234!" authorities="ROLE_ADMIN, ROLE_USER" />
+				<user name="Guest" password="{noop}Guest1234!" authorities="ROLE_USER" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+		
+</beans:beans>
